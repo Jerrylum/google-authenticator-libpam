@@ -77,6 +77,7 @@ typedef struct Params {
   int        allowed_perm;
   time_t     grace_period;
   int        allow_readonly;
+  int        no_drop_privileges;
 } Params;
 
 static char oom;
@@ -1789,6 +1790,8 @@ static int parse_args(pam_handle_t *pamh, int argc, const char **argv,
       params->nullok = NULLOK;
     } else if (!strcmp(argv[i], "allow_readonly")) {
       params->allow_readonly = 1;
+    } else if (!strcmp(argv[i], "no_drop_privileges")) {
+      params->no_drop_privileges = 1;
     } else if (!strcmp(argv[i], "echo-verification-code") ||
                !strcmp(argv[i], "echo_verification_code")) {
       params->echocode = PAM_PROMPT_ECHO_ON;
@@ -1841,7 +1844,7 @@ static int google_authenticator(pam_handle_t *pamh,
   int stopped_by_rate_limit = 0;
 
   // Drop privileges.
-  {
+  if (params.no_drop_privileges != 1) {
     const char* drop_username = username;
 
     // If user doesn't exist, use 'nobody'.

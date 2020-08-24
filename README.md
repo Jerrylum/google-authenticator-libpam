@@ -1,3 +1,7 @@
+# Forked
+
+For complete list of changes, please read README.fork.md.
+
 # Google Authenticator PAM module
 
 Example PAM module demonstrating two-factor authentication for logging
